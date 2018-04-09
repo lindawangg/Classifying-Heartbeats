@@ -10,10 +10,6 @@ File Structure should be:
 
 Requirements:
 - Download set a and b sound files from https://www.kaggle.com/kinguistics/heartbeat-sounds/data
-- Install seaborn 
-```python 
-conda install -c anaconda seaborn 
-```
 - Install pywavelets
 ```python
 conda install pywavelets 
