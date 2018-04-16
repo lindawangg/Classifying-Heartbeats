@@ -1,4 +1,5 @@
 from scipy.signal import find_peaks_cwt
+import numpy as np
 
 def find_peaks(samples):
 	"""Gets a list of peaks for each sample"""

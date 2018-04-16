@@ -14,3 +14,19 @@ Requirements:
 ```python
 conda install pywavelets 
 ```
+- Install Hidden Markov Models
+```python
+conda install -c omnia hmmlearn 
+```
+- Install simplejson
+```python
+conda install -c anaconda simplejson
+```
+- Install eyed3
+```python
+pip install eyeD3 
+```
+- Install pydub
+```python
+pip install pydub
+```
