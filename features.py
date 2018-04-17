@@ -1,11 +1,17 @@
 from scipy.signal import find_peaks_cwt
 import numpy as np
 
-def find_peaks(samples):
+def find_peaks(samples, set_name):
 	"""Gets a list of peaks for each sample"""
+	if set_name.upper() == 'A':
+		interval = 200
+		r = 5
+	else:
+		interval = 20
+		r = 2
 	all_peaks = []
 	for sample in samples:
-		indexes = find_peaks_cwt(sample, np.arange(1, 5))
+		indexes = find_peaks_cwt(sample, np.arange(1, r))
 		peaks = []
 		for i in indexes:
 			if sample[i] > 0.15:
@@ -18,7 +24,7 @@ def find_peaks(samples):
 			max_peak = sample[peaks[start]]
 			max_ind = start
 			while i < len(peaks):
-				if peaks[i] <= (peaks[start] + 200):
+				if peaks[i] <= (peaks[start] + interval):
 					if sample[peaks[i]] > max_peak:
 						max_peak = sample[peaks[i]]
 						max_ind = i

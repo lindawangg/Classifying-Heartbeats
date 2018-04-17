@@ -17,12 +17,18 @@ def moreNsecs(file, N):
 	else:
 		return False
 
+def get_framerate(file):
+	"""Returns framerate"""
+	f = wave.open(file)
+	return f.getframerate()
+
 def get_setA_file_label(N):
 	"""Returns set a file and label"""
 	"""Input: N - minimum file length"""
 
 	x_trainAFile = [] # wave filename 
 	y_trainA = [] # label 
+	framerate = [] #frame rate
 	with open('set_a.csv') as csvfile:
 		reader = csv.reader(csvfile)
 		for row in reader:
@@ -30,7 +36,8 @@ def get_setA_file_label(N):
 				if moreNsecs(row[1],2):
 					x_trainAFile.append(row[1])
 					y_trainA.append(row[2])
-	return np.array(x_trainAFile), np.array(y_trainA)
+					framerate.append(get_framerate(row[1]))
+	return np.array(x_trainAFile), np.array(y_trainA), np.array(framerate)
 
 def get_setB_file_label(N):
 	"""Returns set b file and label"""
@@ -38,6 +45,7 @@ def get_setB_file_label(N):
 
 	x_trainBFile = [] # wave filename 
 	y_trainB = [] # label 
+	framerate = []
 
 	with open('set_b.csv') as csvfile:
 	    reader = csv.reader(csvfile)
@@ -55,7 +63,8 @@ def get_setB_file_label(N):
 		    	if moreNsecs(new_fname,2):
 		    		x_trainBFile.append(new_fname)
 		    		y_trainB.append(row[2])
-	return np.array(x_trainBFile), np.array(y_trainB)
+		    		framerate.append(get_framerate(new_fname))
+	return np.array(x_trainBFile), np.array(y_trainB), np.array(framerate)
 
 def get_signal(file):
 	"""Returns the signal from the file"""
@@ -89,11 +98,12 @@ def get_preprocessed_data(set_name, N=2, factor=10):
 		factor - downsample factor"""
 	filenames = []
 	y_label = []
+	framerates =[]
 
 	if set_name.upper() == 'A':
-		filenames, y_label = get_setA_file_label(N)
+		filenames, y_label, framerates = get_setA_file_label(N)
 	else:
-		filenames, y_label = get_setB_file_label(N)
+		filenames, y_label, framerates = get_setB_file_label(N)
 	raw_data = get_raw_data(filenames) #get raw sound data 
 	x_data = np.array([down_sample(sample, factor=factor) for sample in raw_data]) #downsample 
 	x_data = np.array([pywt.dwt(x,'db4')[0] for x in x_data]) #wavelet decomposition
@@ -101,4 +111,4 @@ def get_preprocessed_data(set_name, N=2, factor=10):
 	min_length = min(map(len, x_data))
 	x_data = np.array([x[:min_length] for x in x_data]) #make all data the same length
 	x_data = np.array([x/max(x) for x in x_data]) #normalize all data
-	return x_data, y_label
+	return x_data, y_label, framerates
