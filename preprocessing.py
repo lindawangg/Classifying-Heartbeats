@@ -90,6 +90,10 @@ def down_sample(x, factor=10):
 		down_array.append(x[i])
 	return np.array(down_array)
 
+def min_length(filenames):
+	data = get_raw_data(filenames)
+	return min(map(len, data))
+
 def get_preprocessed_data(set_name, N=2, factor=10):
 	"""Get preprocessing data and label for a set"""
 	"""Inputs: 
