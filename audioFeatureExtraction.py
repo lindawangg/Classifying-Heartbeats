@@ -21,7 +21,7 @@ from scipy.signal import lfilter, hamming
 import imp
 #from scikits.talkbox import lpc
 
-imp.reload(sys)  
+#imp.reload(sys)  
 #sys.setdefaultencoding('utf8')
 
 eps = 0.00000001
@@ -150,9 +150,9 @@ def stHarmonic(frame, fs):
     if M > len(R):
         M = len(R) - 1
 
-    Gamma = numpy.zeros((M), dtype=numpy.float64)
+    Gamma = numpy.zeros((int(M)), dtype=numpy.float64)
     CSum = numpy.cumsum(frame ** 2)
-    Gamma[m0:M] = R[m0:M] / (numpy.sqrt((g * CSum[M:m0:-1])) + eps)
+    Gamma[int(m0):int(M)] = R[int(m0):int(M)] / (numpy.sqrt((g * CSum[int(M):int(m0):-1])) + eps)
 
     ZCR = stZCR(Gamma)
 
@@ -163,7 +163,7 @@ def stHarmonic(frame, fs):
         if len(Gamma) == 0:
             HR = 1.0
             blag = 0.0
-            Gamma = numpy.zeros((M), dtype=numpy.float64)
+            Gamma = numpy.zeros((int(M)), dtype=numpy.float64)
         else:
             HR = numpy.max(Gamma)
             blag = numpy.argmax(Gamma)
@@ -205,7 +205,7 @@ def mfccInitFilterBanks(fs, nfft):
     heights = 2./(freqs[2:] - freqs[0:-2])
 
     # Compute filterbank coeff (in fft domain, in bins)
-    fbank = numpy.zeros((nFiltTotal, nfft))
+    fbank = numpy.zeros((int(nFiltTotal), int(nfft)))
     nfreqs = numpy.arange(nfft) / (1. * nfft) * fs
 
     for i in range(nFiltTotal):
