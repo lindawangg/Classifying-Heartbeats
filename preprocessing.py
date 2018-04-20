@@ -124,7 +124,7 @@ def get_preprocessed_data(set_name, N=2, factor=10):
 
 	min_length = min(map(len, x_data))
 	x_data = np.array([x[:min_length] for x in x_data]) #make all data the same length
-	x_data = np.array([x/max(x) for x in x_data]) #normalize all data
+	x_data = np.array([x/max(np.abs(x)) for x in x_data]) #normalize all data
 	return x_data, y_label, framerates
 
 def get_test_data(set_name, N=2, factor=10):
@@ -137,7 +137,7 @@ def get_test_data(set_name, N=2, factor=10):
 	raw_data = get_raw_data(filenames)
 	x_data = np.array([down_sample(sample, factor=factor) for sample in raw_data]) #downsample 
 	x_data = np.array([pywt.dwt(x,'db4')[0] for x in x_data]) #wavelet decomposition
-	x_data = np.array([x/max(x) for x in x_data]) #normalize all data
+	x_data = np.array([x/max(np.abs(x)) for x in x_data]) #normalize all data
 	return x_data
 
 
