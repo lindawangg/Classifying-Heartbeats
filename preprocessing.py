@@ -39,6 +39,16 @@ def get_setA_file_label(N):
 					framerate.append(get_framerate(row[1]))
 	return np.array(x_trainAFile), np.array(y_trainA), np.array(framerate)
 
+def get_setA_testfile(N):
+	x_testFile = []
+	with open('set_a.csv') as csvfile:
+		reader = csv.reader(csvfile)
+		for row in reader:
+			if row[2]=='':
+				f_name = row[1][:6] + 'Aunlabelledtest' + row[1][6:]
+				x_testFile.append(f_name)
+	return np.array(x_testFile)
+
 def get_setB_file_label(N):
 	"""Returns set b file and label"""
 	"""Input: N - minimum file length"""
@@ -116,3 +126,18 @@ def get_preprocessed_data(set_name, N=2, factor=10):
 	x_data = np.array([x[:min_length] for x in x_data]) #make all data the same length
 	x_data = np.array([x/max(x) for x in x_data]) #normalize all data
 	return x_data, y_label, framerates
+
+def get_test_data(set_name, N=2, factor=10):
+	filenames = []
+
+	if set_name.upper() == 'A':
+		filenames = get_setA_testfile(N)
+	else:
+		return 'Currently not available'
+	raw_data = get_raw_data(filenames)
+	x_data = np.array([down_sample(sample, factor=factor) for sample in raw_data]) #downsample 
+	x_data = np.array([pywt.dwt(x,'db4')[0] for x in x_data]) #wavelet decomposition
+	x_data = np.array([x/max(x) for x in x_data]) #normalize all data
+	return x_data
+
+
